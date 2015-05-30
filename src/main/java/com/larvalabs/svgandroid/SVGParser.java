@@ -1,35 +1,19 @@
 package com.larvalabs.svgandroid;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.LinearGradient;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Picture;
-import android.graphics.RadialGradient;
-import android.graphics.RectF;
-import android.graphics.Shader;
+import android.graphics.*;
 import android.graphics.Shader.TileMode;
 import android.util.FloatMath;
 import android.util.Log;
+import org.xml.sax.*;
+import org.xml.sax.helpers.DefaultHandler;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE
@@ -761,7 +745,7 @@ public class SVGParser {
 		}
 
 		public Integer getColor(String name) {
-            String v = name;
+			String v = name;
 			if (v == null) {
 				return null;
 			} else if (v.startsWith("#")) {
@@ -790,7 +774,7 @@ public class SVGParser {
 					| (x & 0xF);
 		}
 
-		public float getFloat(String name, float defaultValue) {
+    public float getFloat(String name, float defaultValue) {
 			String v = getAttr(name);
 			if (v == null) {
 				return defaultValue;
@@ -1319,13 +1303,13 @@ public class SVGParser {
 					final Properties props = new Properties(atts);
 
 					final int colour;
-                    final Integer stopColour = props.getColor(props.getAttr("stop-color"));
+					final Integer stopColour = props.getColor(props.getAttr("stop-color"));
 					if (stopColour == null) {
 						colour = 0;
 					} else {
 						float alpha = props.getFloat("stop-opacity", 1) * currentLayerAttributes().opacity;
 						int alphaInt = Math.round(255 * alpha);
-						colour = stopColour.intValue() | (alphaInt << 24);
+						colour = (0x00ffffff & stopColour.intValue()) | (0xff000000 & (alphaInt << 24));
 					}
 					gradient.colors.add(colour);
 
