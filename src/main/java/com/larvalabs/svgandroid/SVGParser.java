@@ -983,6 +983,12 @@ public class SVGParser {
 			// Check for other stroke attributes
 			Float width = atts.getFloat("stroke-width");
 			if (width != null) {
+				if (width == 0) {
+					// don't draw in hairline mode
+					strokePaint.setColor(Color.TRANSPARENT);
+					return false;
+				}
+
 				strokePaint.setStrokeWidth(width);
 			}
 
@@ -1352,7 +1358,7 @@ public class SVGParser {
 				doStroke(props);
 
 				fillSet |= (props.getString("fill") != null);
-				strokeSet |= (props.getString("stroke") != null);
+				strokeSet |= (props.getString("stroke") != null && !"none".equalsIgnoreCase(props.getString("stroke")));
 
 			} else if (!hidden && localName.equals("rect")) {
 				Float x = getFloatAttr("x", atts);
